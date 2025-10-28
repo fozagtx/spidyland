@@ -1,0 +1,64 @@
+:root {
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at top, rgba(30, 8, 45, 1) 0%, rgba(5, 2, 15, 1) 60%, rgba(2, 0, 8, 1) 100%);
+  color: #f5e6ff;
+}
+
+#scene-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  pointer-events: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.overlay-content {
+  background: rgba(9, 1, 20, 0.6);
+  border: 1px solid rgba(255, 136, 0, 0.4);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 0 25px rgba(255, 94, 0, 0.25);
+  backdrop-filter: blur(6px);
+}
+
+.overlay-content h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ff9a1f;
+}
+
+.overlay-content p {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: #f8d9ff;
+}

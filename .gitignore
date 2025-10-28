@@ -1,0 +1,22 @@
+# Node caches and dependencies
+node_modules/
+.npm/
+.pnpm-store/
+*.log
+
+# Build outputs
+/dist/
+/build/
+/out/
+/.next/
+/.turbo/
+
+# Editor directories and files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
