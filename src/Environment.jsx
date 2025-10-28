@@ -15,9 +15,9 @@ export function WebBackground() {
     const centerY = 2;
     const centerZ = -5;
     
-    const numSpokes = 24;
-    const numRings = 12;
-    const maxRadius = 8;
+    const numSpokes = 32;
+    const numRings = 20;
+    const maxRadius = 15;
     
     let vertexIndex = 0;
     const vertexMap = new Map();
@@ -127,10 +127,10 @@ export function MistyAtmosphere() {
     const positions = [];
     const scales = [];
     
-    for (let i = 0; i < 500; i++) {
-      const x = (Math.random() - 0.5) * 20;
-      const y = (Math.random() - 0.5) * 15;
-      const z = (Math.random() - 0.5) * 20 - 3;
+    for (let i = 0; i < 1000; i++) {
+      const x = (Math.random() - 0.5) * 100;
+      const y = (Math.random() - 0.5) * 50;
+      const z = (Math.random() - 0.5) * 100 - 3;
       
       positions.push(x, y, z);
       scales.push(Math.random() * 2 + 0.5);
@@ -207,10 +207,10 @@ export function AmbientParticles() {
     const colors = [];
     const scales = [];
     
-    for (let i = 0; i < 200; i++) {
-      const x = (Math.random() - 0.5) * 15;
-      const y = Math.random() * 10 - 2;
-      const z = (Math.random() - 0.5) * 15;
+    for (let i = 0; i < 500; i++) {
+      const x = (Math.random() - 0.5) * 80;
+      const y = Math.random() * 30 - 2;
+      const z = (Math.random() - 0.5) * 80;
       
       positions.push(x, y, z);
       
