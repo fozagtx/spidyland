@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Spider from './Spider';
+import SpiderWeb from './SpiderWeb';
+import ToastContainer from './Toast';
 
 const App = () => {
   const [spiders, setSpiders] = useState([]);
+  const [toasts, setToasts] = useState([]);
   const nextIdRef = useRef(0);
+  const toastIdRef = useRef(0);
 
   useEffect(() => {
     const initialSpiders = [];
@@ -19,6 +23,15 @@ const App = () => {
     }
     setSpiders(initialSpiders);
   }, []);
+
+  const showToast = (message, type = 'success', duration = 3000) => {
+    const id = toastIdRef.current++;
+    setToasts((prev) => [...prev, { id, message, type, duration }]);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
 
   const handleSpiderClick = () => {
     setSpiders((prev) => {
@@ -39,8 +52,14 @@ const App = () => {
     });
   };
 
+  const handleWebClick = () => {
+    showToast('Happy Halloween! 🎃👻🕷️', 'success', 4000);
+  };
+
   return (
     <div className="app">
+      <SpiderWeb onClick={handleWebClick} size={300} />
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
       {spiders.map((spider) => (
         <Spider
           key={spider.id}
