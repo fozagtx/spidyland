@@ -271,18 +271,19 @@ export function ChasingSpider({ position, playerPosition, speed = 0.02 }) {
   const hairs = useMemo(() => createHairs(1200), [hairsMaterial]);
 
   return (
-    <group ref={groupRef} position={currentPosRef.current}>
-      {legs.map((leg, index) => (
-        <primitive key={index} object={leg.group} />
-      ))}
+    <group ref={groupRef} position={currentPosRef.current} rotation={[0, 0, 0]}>
+      <group position={[0, 0.5, 0]}>
+        {legs.map((leg, index) => (
+          <primitive key={index} object={leg.group} />
+        ))}
 
-      <mesh ref={bodyRef} geometry={bodyGeometry} material={bodyMaterial} castShadow receiveShadow>
-        <primitive object={hairs} />
-      </mesh>
+        <mesh ref={bodyRef} geometry={bodyGeometry} material={bodyMaterial} castShadow receiveShadow>
+          <primitive object={hairs} />
+        </mesh>
 
-      <mesh ref={abdomenRef} position={[0, 0, -0.8]} geometry={abdomenGeometry} material={bodyMaterial} castShadow receiveShadow>
-        <primitive object={createHairs(900)} />
-      </mesh>
+        <mesh ref={abdomenRef} position={[0, 0, -0.8]} geometry={abdomenGeometry} material={bodyMaterial} castShadow receiveShadow>
+          <primitive object={createHairs(900)} />
+        </mesh>
 
       <group position={[0, 0.08, 0.35]}>
         <mesh position={[0.2, 0.08, 0]} castShadow>
@@ -387,6 +388,7 @@ export function ChasingSpider({ position, playerPosition, speed = 0.02 }) {
       </group>
 
       <pointLight position={[0, 0.2, 0]} intensity={0.5} distance={3} color="#ff2020" />
+      </group>
     </group>
   );
 }
