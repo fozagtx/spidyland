@@ -93,9 +93,9 @@ export function WebBackground() {
         varying float vDistance;
         
         void main() {
-          float alpha = opacity * (1.0 - vDistance / 8.0) * 0.7;
-          vec3 color = vec3(0.9, 0.95, 1.0);
-          float shimmer = 0.7 + 0.3 * sin(vDistance * 3.0);
+          float alpha = opacity * (1.0 - vDistance / 8.0) * 0.4;
+          vec3 color = vec3(0.95, 0.97, 1.0);
+          float shimmer = 0.8 + 0.2 * sin(vDistance * 3.0);
           gl_FragColor = vec4(color * shimmer, alpha);
         }
       `,
@@ -146,7 +146,7 @@ export function MistyAtmosphere() {
     return new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        color: { value: new THREE.Color(0.1, 0.08, 0.15) },
+        color: { value: new THREE.Color(0.85, 0.92, 0.98) },
       },
       vertexShader: `
         attribute float scale;
@@ -175,7 +175,7 @@ export function MistyAtmosphere() {
           
           if (dist > 0.5) discard;
           
-          float alpha = (1.0 - dist * 2.0) * 0.3 * vScale;
+          float alpha = (1.0 - dist * 2.0) * 0.15 * vScale;
           gl_FragColor = vec4(color, alpha);
         }
       `,
@@ -215,10 +215,10 @@ export function AmbientParticles() {
       positions.push(x, y, z);
       
       const color = new THREE.Color();
-      if (Math.random() > 0.7) {
-        color.setHSL(0.05, 0.8, 0.5);
+      if (Math.random() > 0.5) {
+        color.setHSL(0.55, 0.3, 0.85);
       } else {
-        color.setHSL(0.75, 0.6, 0.4);
+        color.setHSL(0.6, 0.2, 0.9);
       }
       colors.push(color.r, color.g, color.b);
       
@@ -329,12 +329,12 @@ export function HDRILighting() {
 
   return (
     <>
-      <ambientLight intensity={0.15} color="#1a0f2e" />
+      <ambientLight intensity={0.6} color="#f0f8ff" />
       
       <directionalLight
         position={[5, 10, 5]}
-        intensity={0.4}
-        color="#ff8844"
+        intensity={1.2}
+        color="#fffef8"
         castShadow
         shadow-mapSize-width={4096}
         shadow-mapSize-height={4096}
@@ -350,8 +350,8 @@ export function HDRILighting() {
       
       <directionalLight
         position={[-5, 8, -5]}
-        intensity={0.25}
-        color="#4422ff"
+        intensity={0.8}
+        color="#d0e8ff"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -360,14 +360,14 @@ export function HDRILighting() {
       />
       
       <hemisphereLight
-        skyColor="#0a0515"
-        groundColor="#1a0505"
-        intensity={0.3}
+        skyColor="#e8f4f8"
+        groundColor="#d0e0e8"
+        intensity={0.7}
       />
       
-      <VolumetricLight position={[4, 4, 3]} color="#ff4400" />
-      <VolumetricLight position={[-3, 5, 2]} color="#ff6622" />
-      <VolumetricLight position={[2, 6, -4]} color="#aa00ff" />
+      <pointLight position={[4, 4, 3]} color="#ffffff" intensity={0.8} distance={15} />
+      <pointLight position={[-3, 5, 2]} color="#f0f8ff" intensity={0.6} distance={15} />
+      <pointLight position={[2, 6, -4]} color="#e8f0ff" intensity={0.5} distance={15} />
     </>
   );
 }

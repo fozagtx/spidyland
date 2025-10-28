@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { SpiderModel } from './SpiderModel';
 import { WebBackground, MistyAtmosphere, HDRILighting, AmbientParticles } from './Environment';
 import Spider from './Spider';
+import CrackedScreen from './CrackedScreen';
 
 function CameraRig() {
   const cameraRef = useRef();
@@ -42,9 +43,9 @@ function Floor() {
     const ctx = canvas.getContext('2d');
     
     const gradient = ctx.createRadialGradient(512, 512, 0, 512, 512, 512);
-    gradient.addColorStop(0, '#0f0505');
-    gradient.addColorStop(0.5, '#0a0303');
-    gradient.addColorStop(1, '#050101');
+    gradient.addColorStop(0, '#e8f4f8');
+    gradient.addColorStop(0.5, '#d5e8f0');
+    gradient.addColorStop(1, '#c0dde8');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 1024, 1024);
     
@@ -52,9 +53,9 @@ function Floor() {
       const x = Math.random() * 1024;
       const y = Math.random() * 1024;
       const size = Math.random() * 40 + 10;
-      const opacity = Math.random() * 0.15;
+      const opacity = Math.random() * 0.1;
       
-      ctx.fillStyle = `rgba(20, 5, 5, ${opacity})`;
+      ctx.fillStyle = `rgba(200, 220, 230, ${opacity})`;
       ctx.beginPath();
       ctx.arc(x, y, size, 0, Math.PI * 2);
       ctx.fill();
@@ -71,10 +72,10 @@ function Floor() {
       <planeGeometry args={[50, 50, 100, 100]} />
       <meshStandardMaterial
         map={floorTexture}
-        color="#0a0505"
-        roughness={0.95}
-        metalness={0.05}
-        envMapIntensity={0.3}
+        color="#d0e8f0"
+        roughness={0.8}
+        metalness={0.1}
+        envMapIntensity={0.5}
       />
     </mesh>
   );
@@ -85,8 +86,8 @@ function BackgroundPlane() {
     <mesh position={[0, 2, -8]}>
       <planeGeometry args={[30, 20]} />
       <meshStandardMaterial
-        color="#050208"
-        roughness={1.0}
+        color="#b8d8e8"
+        roughness={0.9}
         metalness={0.0}
         side={THREE.DoubleSide}
       />
@@ -116,12 +117,46 @@ export default function Scene() {
     }));
   });
 
-  const handleSpiderClick = (id) => {
-    setSpiders((prev) => prev.filter((spider) => spider.id !== id));
+  const [cracks, setCracks] = useState([]);
+  const [nextId, setNextId] = useState(5);
+
+  const handleSpiderClick = (id, event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX;
+    const y = event.clientY;
+
+    setSpiders((prev) => {
+      const clickedSpider = prev.find((s) => s.id === id);
+      if (!clickedSpider) return prev;
+
+      const newSpiders = [];
+      for (let i = 0; i < 3; i++) {
+        newSpiders.push({
+          id: nextId + i,
+          initialX: x + (Math.random() - 0.5) * 200,
+          initialY: y + (Math.random() - 0.5) * 200,
+          initialRotation: Math.random() * 360,
+          size: 25 + Math.random() * 15,
+          speed: 1 + Math.random() * 2,
+        });
+      }
+      
+      setNextId(nextId + 3);
+      return [...prev, ...newSpiders];
+    });
+  };
+
+  const handleSpiderDoubleClick = (id, event) => {
+    const x = event.clientX;
+    const y = event.clientY;
+    
+    setCracks((prev) => [...prev, { x, y, id: Date.now() }]);
   };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#000000' }}>
+    <div style={{ width: '100vw', height: '100vh', background: 'linear-gradient(135deg, #e8f5f9 0%, #d0e8f5 50%, #b8dde8 100%)' }}>
+      <CrackedScreen cracks={cracks} onAnimationComplete={() => {}} />
+      
       {spiders.map((spider) => (
         <Spider
           key={spider.id}
@@ -130,7 +165,8 @@ export default function Scene() {
           initialRotation={spider.initialRotation}
           size={spider.size}
           speed={spider.speed}
-          onClick={() => handleSpiderClick(spider.id)}
+          onClick={(e) => handleSpiderClick(spider.id, e)}
+          onDoubleClick={(e) => handleSpiderDoubleClick(spider.id, e)}
         />
       ))}
 
@@ -148,8 +184,8 @@ export default function Scene() {
         }}
         dpr={[1, 2]}
       >
-        <color attach="background" args={['#000000']} />
-        <fog attach="fog" args={['#0a0515', 5, 25]} />
+        <color attach="background" args={['#d8ecf5']} />
+        <fog attach="fog" args={['#b8d8e8', 15, 35]} />
 
         <CameraRig />
 
@@ -207,27 +243,30 @@ export default function Scene() {
           position: 'absolute',
           top: '20px',
           left: '20px',
-          color: '#ff6622',
+          color: '#2c5f7f',
           fontFamily: 'monospace',
           fontSize: '14px',
-          textShadow: '0 0 10px rgba(255, 102, 34, 0.8)',
+          textShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
           pointerEvents: 'none',
           userSelect: 'none',
           lineHeight: '1.6',
+          background: 'rgba(255, 255, 255, 0.85)',
+          padding: '15px 20px',
+          borderRadius: '12px',
+          backdropFilter: 'blur(10px)',
         }}
       >
-        <div style={{ fontWeight: 'bold', fontSize: '18px', marginBottom: '10px' }}>
-          🕷️ Hyper-Realistic Spider
+        <div style={{ fontWeight: 'bold', fontSize: '20px', marginBottom: '10px', color: '#1a3f5f' }}>
+          🕷️ White Spider World
         </div>
-        <div>✓ PBR Materials with Subsurface Scattering</div>
-        <div>✓ HDRI-Based Lighting</div>
-        <div>✓ Ray-Traced Soft Shadows</div>
-        <div>✓ Procedural Textures (4K)</div>
-        <div>✓ Realistic Joint Animation</div>
-        <div>✓ Volumetric Mist</div>
-        <div>✓ Cinematic Post-Processing</div>
+        <div>✓ Click Spiders to Multiply</div>
+        <div>✓ Double-Click for Cracked Screen Effect</div>
+        <div>✓ White PBR Materials</div>
+        <div>✓ Light, Eye-Friendly Background</div>
+        <div>✓ Realistic Animations</div>
+        <div>✓ Beautiful 3D Graphics</div>
         <div style={{ marginTop: '10px', opacity: 0.7, fontSize: '12px' }}>
-          Drag to rotate • Scroll to zoom
+          Drag to rotate • Scroll to zoom • Click to multiply
         </div>
       </div>
 
@@ -236,16 +275,20 @@ export default function Scene() {
           position: 'absolute',
           bottom: '20px',
           right: '20px',
-          color: '#ff6622',
+          color: '#2c5f7f',
           fontFamily: 'monospace',
           fontSize: '12px',
           textAlign: 'right',
-          textShadow: '0 0 10px rgba(255, 102, 34, 0.8)',
+          textShadow: '0 1px 4px rgba(0, 0, 0, 0.2)',
           pointerEvents: 'none',
           userSelect: 'none',
+          background: 'rgba(255, 255, 255, 0.85)',
+          padding: '10px 15px',
+          borderRadius: '8px',
+          backdropFilter: 'blur(10px)',
         }}
       >
-        Happy Halloween 🎃👻
+        🎮 Enjoy the Spider World! 🕸️✨
       </div>
     </div>
   );
