@@ -48,3 +48,143 @@ canvas {
                  0 0 45px rgba(255, 102, 34, 0.5);
   }
 }
+
+/* Spider sprite styles */
+.spider {
+  position: fixed;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.1s linear;
+}
+
+.spider-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.spider-head {
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  background: radial-gradient(circle, #1a0a0a, #000000);
+  border-radius: 50%;
+  top: 15%;
+  left: 30%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.spider-abdomen {
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, #2a0a0a, #000000);
+  border-radius: 50%;
+  bottom: 10%;
+  left: 20%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+.spider-legs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.legs-left {
+  transform-origin: center;
+}
+
+.legs-right {
+  transform-origin: center;
+  transform: scaleY(-1);
+}
+
+.leg {
+  position: absolute;
+  width: 80%;
+  height: 3%;
+  background: linear-gradient(to right, #000000, #1a0a0a, #000000);
+  border-radius: 50%;
+  transform-origin: 20% 50%;
+}
+
+.leg-1 {
+  top: 20%;
+  left: 10%;
+  transform: rotate(-45deg);
+}
+
+.leg-2 {
+  top: 35%;
+  left: 10%;
+  transform: rotate(-30deg);
+}
+
+.leg-3 {
+  top: 50%;
+  left: 10%;
+  transform: rotate(-15deg);
+}
+
+.leg-4 {
+  top: 65%;
+  left: 10%;
+  transform: rotate(0deg);
+}
+
+.spider-eyes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.eye {
+  position: absolute;
+  width: 4%;
+  height: 4%;
+  background: radial-gradient(circle, #ff0000, #660000);
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+}
+
+.eye-1 {
+  top: 20%;
+  left: 38%;
+}
+
+.eye-2 {
+  top: 20%;
+  left: 58%;
+}
+
+.eye-3 {
+  top: 25%;
+  left: 33%;
+}
+
+.eye-4 {
+  top: 25%;
+  left: 63%;
+}
+
+.eye-5 {
+  top: 30%;
+  left: 30%;
+}
+
+.eye-6 {
+  top: 30%;
+  left: 66%;
+}
+
+.eye-7 {
+  top: 28%;
+  left: 42%;
+}
+
+.eye-8 {
+  top: 28%;
+  left: 54%;
+}
