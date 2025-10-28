@@ -3,11 +3,12 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { soundManager } from './SoundManager';
 
-export function Player({ position, onPositionChange, targetPosition }) {
+export function Player({ position, onPositionChange, targetPosition, keysPressed, velocity }) {
   const groupRef = useRef();
   const bodyRef = useRef();
   const timeRef = useRef(0);
   const lastFootstepRef = useRef(0);
+  const lastPositionRef = useRef(new THREE.Vector3(position[0], position[1], position[2]));
 
   useFrame((state, delta) => {
     timeRef.current += delta;
@@ -16,15 +17,29 @@ export function Player({ position, onPositionChange, targetPosition }) {
       groupRef.current.position.x = position[0];
       groupRef.current.position.z = position[2];
 
-      if (targetPosition) {
-        const dx = targetPosition[0] - position[0];
-        const dz = targetPosition[2] - position[2];
-        const angle = Math.atan2(dx, dz);
-        groupRef.current.rotation.y = angle;
+      // Calculate movement direction for rotation
+      const currentPos = new THREE.Vector3(position[0], 0, position[2]);
+      const movement = currentPos.clone().sub(lastPositionRef.current);
+      
+      if (movement.length() > 0.01) {
+        const angle = Math.atan2(movement.x, movement.z);
+        // Smoothly interpolate rotation
+        const targetRotation = angle;
+        const currentRotation = groupRef.current.rotation.y;
+        const rotationDiff = targetRotation - currentRotation;
+        
+        // Normalize rotation difference to [-PI, PI]
+        let normalizedDiff = rotationDiff % (Math.PI * 2);
+        if (normalizedDiff > Math.PI) normalizedDiff -= Math.PI * 2;
+        if (normalizedDiff < -Math.PI) normalizedDiff += Math.PI * 2;
+        
+        groupRef.current.rotation.y += normalizedDiff * 0.15;
       }
+      
+      lastPositionRef.current.set(position[0], position[1], position[2]);
 
-      const isMoving = Math.abs(position[0] - groupRef.current.position.x) > 0.01 ||
-                       Math.abs(position[2] - groupRef.current.position.z) > 0.01;
+      // Check if player is actually moving based on velocity
+      const isMoving = velocity && (Math.abs(velocity.x) > 0.01 || Math.abs(velocity.z) > 0.01);
 
       if (isMoving && timeRef.current - lastFootstepRef.current > 0.3) {
         soundManager.playFootstep();
@@ -33,8 +48,12 @@ export function Player({ position, onPositionChange, targetPosition }) {
     }
 
     if (bodyRef.current) {
-      bodyRef.current.rotation.x = Math.sin(timeRef.current * 8) * 0.05;
-      bodyRef.current.position.y = Math.abs(Math.sin(timeRef.current * 8)) * 0.1;
+      const speed = velocity ? Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z) : 0;
+      const bobSpeed = 8 + speed * 5;
+      const bobAmount = 0.05 + speed * 0.05;
+      
+      bodyRef.current.rotation.x = Math.sin(timeRef.current * bobSpeed) * bobAmount;
+      bodyRef.current.position.y = Math.abs(Math.sin(timeRef.current * bobSpeed)) * (0.1 + speed * 0.1);
     }
   });
 

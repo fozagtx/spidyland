@@ -1,10 +1,10 @@
 import React, { Suspense, useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Sky, Stars } from '@react-three/drei';
+import { PerspectiveCamera, Sky, Stars } from '@react-three/drei';
 import { EffectComposer, Bloom, DepthOfField, Vignette } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
-import { Player } from './Player';
+import { PlayerController } from './PlayerController';
 import { Treasure } from './Treasure';
 import { ChasingSpider } from './ChasingSpider';
 import { soundManager } from './SoundManager';
@@ -124,9 +124,6 @@ export default function GameScene() {
   const [treasurePosition, setTreasurePosition] = useState([15, 0, 15]);
   const [treasureCollected, setTreasureCollected] = useState(false);
   const [score, setScore] = useState(0);
-  const [keysPressed, setKeysPressed] = useState({});
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchMove, setTouchMove] = useState(null);
 
   const spiders = useMemo(() => [
     { id: 1, position: [-10, 0, -10], speed: 0.025 },
@@ -136,94 +133,19 @@ export default function GameScene() {
     { id: 5, position: [0, 0, -15], speed: 0.026 },
   ], []);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      setKeysPressed(prev => ({ ...prev, [e.key.toLowerCase()]: true }));
-    };
-
-    const handleKeyUp = (e) => {
-      setKeysPressed(prev => ({ ...prev, [e.key.toLowerCase()]: false }));
-    };
-
-    const handleTouchStart = (e) => {
-      const touch = e.touches[0];
-      setTouchStart({ x: touch.clientX, y: touch.clientY });
-    };
-
-    const handleTouchMove = (e) => {
-      if (!touchStart) return;
-      const touch = e.touches[0];
-      setTouchMove({ x: touch.clientX, y: touch.clientY });
-    };
-
-    const handleTouchEnd = () => {
-      setTouchStart(null);
-      setTouchMove(null);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [touchStart]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let newX = playerPosition[0];
-      let newZ = playerPosition[2];
-      const moveSpeed = 0.15;
-
-      if (keysPressed['w'] || keysPressed['arrowup']) newZ -= moveSpeed;
-      if (keysPressed['s'] || keysPressed['arrowdown']) newZ += moveSpeed;
-      if (keysPressed['a'] || keysPressed['arrowleft']) newX -= moveSpeed;
-      if (keysPressed['d'] || keysPressed['arrowright']) newX += moveSpeed;
-
-      if (touchStart && touchMove) {
-        const deltaX = touchMove.x - touchStart.x;
-        const deltaY = touchMove.y - touchStart.y;
-        newX += deltaX * 0.01;
-        newZ += deltaY * 0.01;
-      }
-
-      newX = Math.max(-45, Math.min(45, newX));
-      newZ = Math.max(-45, Math.min(45, newZ));
-
-      if (newX !== playerPosition[0] || newZ !== playerPosition[2]) {
-        setPlayerPosition([newX, 0, newZ]);
-      }
-
-      if (!treasureCollected) {
-        const dx = treasurePosition[0] - newX;
-        const dz = treasurePosition[2] - newZ;
-        const distance = Math.sqrt(dx * dx + dz * dz);
-
-        if (distance < 2) {
-          setTreasureCollected(true);
-          setScore(prev => prev + 100);
-          soundManager.playTreasureCollect();
-          setTimeout(() => {
-            setTreasureCollected(false);
-            setTreasurePosition([
-              (Math.random() - 0.5) * 40,
-              0,
-              (Math.random() - 0.5) * 40
-            ]);
-          }, 3000);
-        }
-      }
-    }, 16);
-
-    return () => clearInterval(interval);
-  }, [keysPressed, playerPosition, treasurePosition, treasureCollected, touchStart, touchMove]);
+  const handleTreasureCollect = () => {
+    setTreasureCollected(true);
+    setScore(prev => prev + 100);
+    soundManager.playTreasureCollect();
+    setTimeout(() => {
+      setTreasureCollected(false);
+      setTreasurePosition([
+        (Math.random() - 0.5) * 40,
+        0,
+        (Math.random() - 0.5) * 40
+      ]);
+    }, 3000);
+  };
 
   const handleStartGame = async () => {
     await soundManager.init();
@@ -319,7 +241,12 @@ export default function GameScene() {
         <pointLight position={[20, 5, 20]} intensity={0.4} distance={40} color="#50c878" />
 
         <Suspense fallback={<LoadingFallback />}>
-          <Player position={playerPosition} />
+          <PlayerController 
+            onPositionChange={setPlayerPosition}
+            treasurePosition={treasurePosition}
+            treasureCollected={treasureCollected}
+            onTreasureCollect={handleTreasureCollect}
+          />
           <Treasure position={treasurePosition} collected={treasureCollected} />
           
           {spiders.map((spider) => (
@@ -337,16 +264,6 @@ export default function GameScene() {
         <EnhancedFloor />
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
         <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0.6} azimuth={0.25} />
-
-        <OrbitControls
-          enablePan={false}
-          enableZoom={true}
-          minDistance={10}
-          maxDistance={40}
-          minPolarAngle={Math.PI / 6}
-          maxPolarAngle={Math.PI / 2.5}
-          target={playerPosition}
-        />
 
         <EffectComposer multisampling={8}>
           <Bloom
@@ -385,11 +302,11 @@ export default function GameScene() {
         }}
       >
         <div style={{ fontSize: '24px', marginBottom: '10px', color: '#00ffff' }}>
-          🎮 Controls
+          🎮 VR Controls
         </div>
         <div>⌨️ WASD / Arrow Keys - Move</div>
         <div>📱 Touch & Drag - Mobile</div>
-        <div>🖱️ Mouse - Rotate Camera</div>
+        <div>🎥 Dynamic Camera - Auto Follow</div>
         <div>🎯 Score: <span style={{ color: '#ffd700' }}>{score}</span></div>
       </div>
 
