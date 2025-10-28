@@ -1,8 +1,8 @@
 import React from 'react';
-import Scene from './Scene';
+import GameScene from './GameScene';
 
 const App = () => {
-  return <Scene />;
+  return <GameScene />;
 };
 
 export default App;
