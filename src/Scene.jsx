@@ -1,4 +1,4 @@
-import React, { Suspense, useRef, useMemo } from 'react';
+import React, { Suspense, useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Effects } from '@react-three/drei';
 import { EffectComposer, Bloom, DepthOfField, Vignette, ChromaticAberration } from '@react-three/postprocessing';
@@ -6,6 +6,7 @@ import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { SpiderModel } from './SpiderModel';
 import { WebBackground, MistyAtmosphere, HDRILighting, AmbientParticles } from './Environment';
+import Spider from './Spider';
 
 function CameraRig() {
   const cameraRef = useRef();
@@ -103,8 +104,36 @@ function LoadingFallback() {
 }
 
 export default function Scene() {
+  const [spiders, setSpiders] = useState(() => {
+    const numSpiders = 5;
+    return Array.from({ length: numSpiders }, (_, i) => ({
+      id: i,
+      initialX: Math.random() * window.innerWidth,
+      initialY: Math.random() * window.innerHeight,
+      initialRotation: Math.random() * 360,
+      size: 30 + Math.random() * 20,
+      speed: 1 + Math.random() * 2,
+    }));
+  });
+
+  const handleSpiderClick = (id) => {
+    setSpiders((prev) => prev.filter((spider) => spider.id !== id));
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000000' }}>
+      {spiders.map((spider) => (
+        <Spider
+          key={spider.id}
+          initialX={spider.initialX}
+          initialY={spider.initialY}
+          initialRotation={spider.initialRotation}
+          size={spider.size}
+          speed={spider.speed}
+          onClick={() => handleSpiderClick(spider.id)}
+        />
+      ))}
+
       <Canvas
         shadows
         gl={{
