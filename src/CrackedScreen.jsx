@@ -1,21 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 const CrackedScreen = ({ cracks, onAnimationComplete }) => {
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    if (cracks.length > 0) {
-      const timer = setTimeout(() => {
-        setVisible(false);
-        if (onAnimationComplete) {
-          onAnimationComplete();
-        }
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [cracks, onAnimationComplete]);
-
   const generateCrackPath = (crack) => {
     const { x, y } = crack;
     const numBranches = 5 + Math.floor(Math.random() * 8);
@@ -62,7 +47,7 @@ const CrackedScreen = ({ cracks, onAnimationComplete }) => {
     return paths;
   };
 
-  if (!visible || cracks.length === 0) return null;
+  if (cracks.length === 0) return null;
 
   return (
     <div
@@ -73,7 +58,7 @@ const CrackedScreen = ({ cracks, onAnimationComplete }) => {
         width: '100vw',
         height: '100vh',
         pointerEvents: 'none',
-        zIndex: 10000,
+        zIndex: 9999,
       }}
     >
       <svg

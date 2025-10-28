@@ -26,9 +26,9 @@ function CameraRig() {
       ref={cameraRef}
       makeDefault
       position={[0, 2, 8]}
-      fov={45}
+      fov={60}
       near={0.1}
-      far={100}
+      far={500}
     />
   );
 }
@@ -69,7 +69,7 @@ function Floor() {
   
   return (
     <mesh ref={floorRef} receiveShadow rotation-x={-Math.PI / 2} position={[0, -2, 0]}>
-      <planeGeometry args={[50, 50, 100, 100]} />
+      <planeGeometry args={[500, 500, 100, 100]} />
       <meshStandardMaterial
         map={floorTexture}
         color="#d0e8f0"
@@ -83,8 +83,8 @@ function Floor() {
 
 function BackgroundPlane() {
   return (
-    <mesh position={[0, 2, -8]}>
-      <planeGeometry args={[30, 20]} />
+    <mesh position={[0, 2, -50]}>
+      <planeGeometry args={[300, 200]} />
       <meshStandardMaterial
         color="#b8d8e8"
         roughness={0.9}
@@ -153,9 +153,13 @@ export default function Scene() {
     setCracks((prev) => [...prev, { x, y, id: Date.now() }]);
   };
 
+  const handleCrackAnimationComplete = (crackId) => {
+    setCracks((prev) => prev.filter(c => c.id !== crackId));
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh', background: 'linear-gradient(135deg, #e8f5f9 0%, #d0e8f5 50%, #b8dde8 100%)' }}>
-      <CrackedScreen cracks={cracks} onAnimationComplete={() => {}} />
+      <CrackedScreen cracks={cracks} onAnimationComplete={handleCrackAnimationComplete} />
       
       {spiders.map((spider) => (
         <Spider
@@ -185,7 +189,7 @@ export default function Scene() {
         dpr={[1, 2]}
       >
         <color attach="background" args={['#d8ecf5']} />
-        <fog attach="fog" args={['#b8d8e8', 15, 35]} />
+        <fog attach="fog" args={['#b8d8e8', 50, 300]} />
 
         <CameraRig />
 
@@ -202,10 +206,10 @@ export default function Scene() {
         <BackgroundPlane />
 
         <OrbitControls
-          enablePan={false}
+          enablePan={true}
           enableZoom={true}
           minDistance={4}
-          maxDistance={15}
+          maxDistance={200}
           minPolarAngle={Math.PI / 4}
           maxPolarAngle={Math.PI / 2}
           target={[0, 0, 0]}
@@ -256,39 +260,10 @@ export default function Scene() {
           backdropFilter: 'blur(10px)',
         }}
       >
-        <div style={{ fontWeight: 'bold', fontSize: '20px', marginBottom: '10px', color: '#1a3f5f' }}>
-          🕷️ White Spider World
-        </div>
-        <div>✓ Click Spiders to Multiply</div>
-        <div>✓ Double-Click for Cracked Screen Effect</div>
-        <div>✓ White PBR Materials</div>
-        <div>✓ Light, Eye-Friendly Background</div>
-        <div>✓ Realistic Animations</div>
-        <div>✓ Beautiful 3D Graphics</div>
-        <div style={{ marginTop: '10px', opacity: 0.7, fontSize: '12px' }}>
-          Drag to rotate • Scroll to zoom • Click to multiply
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          right: '20px',
-          color: '#2c5f7f',
-          fontFamily: 'monospace',
-          fontSize: '12px',
-          textAlign: 'right',
-          textShadow: '0 1px 4px rgba(0, 0, 0, 0.2)',
-          pointerEvents: 'none',
-          userSelect: 'none',
-          background: 'rgba(255, 255, 255, 0.85)',
-          padding: '10px 15px',
-          borderRadius: '8px',
-          backdropFilter: 'blur(10px)',
-        }}
-      >
-        🎮 Enjoy the Spider World! 🕸️✨
+        <div>Drag</div>
+        <div>Scroll</div>
+        <div>Click</div>
+        <div>Double-Click</div>
       </div>
     </div>
   );
