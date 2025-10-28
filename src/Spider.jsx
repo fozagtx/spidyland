@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Spider = ({ initialX, initialY, initialRotation, size, speed, onClick }) => {
+const Spider = ({ initialX, initialY, initialRotation, size, speed, onClick, onDoubleClick }) => {
   const [position, setPosition] = useState({ x: initialX, y: initialY });
   const [rotation, setRotation] = useState(initialRotation);
   const targetRef = useRef({ x: initialX, y: initialY });
   const animationRef = useRef(null);
   const legAnimationRef = useRef(0);
+  const clickTimeoutRef = useRef(null);
 
   useEffect(() => {
     const pickNewTarget = () => {
@@ -56,6 +57,23 @@ const Spider = ({ initialX, initialY, initialRotation, size, speed, onClick }) =
     };
   }, [size, speed]);
 
+  const handleClick = (e) => {
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+      if (onDoubleClick) {
+        onDoubleClick(e);
+      }
+    } else {
+      clickTimeoutRef.current = setTimeout(() => {
+        if (onClick) {
+          onClick(e);
+        }
+        clickTimeoutRef.current = null;
+      }, 250);
+    }
+  };
+
   return (
     <div
       className="spider"
@@ -66,7 +84,7 @@ const Spider = ({ initialX, initialY, initialRotation, size, speed, onClick }) =
         height: `${size}px`,
         transform: `rotate(${rotation}deg)`,
       }}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <div className="spider-body">
         <div className="spider-head"></div>

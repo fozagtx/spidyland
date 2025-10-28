@@ -11,10 +11,10 @@ export class TextureGenerator {
       resolution / 2, resolution / 2, 0,
       resolution / 2, resolution / 2, resolution / 2
     );
-    gradient.addColorStop(0, '#1a0505');
-    gradient.addColorStop(0.4, '#2d0a0a');
-    gradient.addColorStop(0.7, '#450f0f');
-    gradient.addColorStop(1, '#0a0202');
+    gradient.addColorStop(0, '#ffffff');
+    gradient.addColorStop(0.4, '#f5f5f5');
+    gradient.addColorStop(0.7, '#eeeeee');
+    gradient.addColorStop(1, '#e8e8e8');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, resolution, resolution);
 
@@ -24,7 +24,7 @@ export class TextureGenerator {
       const size = Math.random() * 4 + 1;
       const opacity = Math.random() * 0.4 + 0.1;
       
-      ctx.fillStyle = `rgba(${100 + Math.random() * 50}, ${10 + Math.random() * 20}, ${10 + Math.random() * 20}, ${opacity})`;
+      ctx.fillStyle = `rgba(${240 + Math.random() * 15}, ${240 + Math.random() * 15}, ${245 + Math.random() * 10}, ${opacity})`;
       ctx.beginPath();
       ctx.arc(x, y, size, 0, Math.PI * 2);
       ctx.fill();
@@ -36,7 +36,7 @@ export class TextureGenerator {
       const length = Math.random() * 30 + 10;
       const angle = Math.random() * Math.PI * 2;
       
-      ctx.strokeStyle = `rgba(150, 20, 20, ${Math.random() * 0.3 + 0.2})`;
+      ctx.strokeStyle = `rgba(235, 235, 240, ${Math.random() * 0.3 + 0.2})`;
       ctx.lineWidth = Math.random() * 2 + 0.5;
       ctx.beginPath();
       ctx.moveTo(x, y);

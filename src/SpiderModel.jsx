@@ -68,14 +68,14 @@ export function SpiderModel({ position = [0, 0, 0] }) {
 
   const hairsMaterial = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(0.3, 0.05, 0.05),
-      roughness: 0.7,
-      metalness: 0.05,
+      color: new THREE.Color(0.95, 0.95, 0.98),
+      roughness: 0.5,
+      metalness: 0.1,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.7,
       side: THREE.DoubleSide,
-      clearcoat: 0.1,
-      transmission: 0.1,
+      clearcoat: 0.3,
+      transmission: 0.05,
     });
   }, []);
 
@@ -262,27 +262,27 @@ export function SpiderModel({ position = [0, 0, 0] }) {
         <mesh position={[0.25, 0.1, 0]} castShadow>
           <sphereGeometry args={[0.09, 32, 32]} />
           <meshPhysicalMaterial
-            color={new THREE.Color(0.05, 0.02, 0.02)}
+            color={new THREE.Color(0.1, 0.1, 0.15)}
             metalness={0.9}
             roughness={0.1}
             clearcoat={1.0}
             clearcoatRoughness={0.1}
             envMapIntensity={2.0}
-            emissive={new THREE.Color(0.3, 0.05, 0.05)}
+            emissive={new THREE.Color(0.05, 0.05, 0.08)}
             emissiveIntensity={0.5}
           />
         </mesh>
         <mesh position={[0.25, 0.1, 0]} scale={[0.6, 0.6, 0.6]}>
           <sphereGeometry args={[0.06, 32, 32]} />
           <meshPhysicalMaterial
-            color={new THREE.Color(0.8, 0.1, 0.1)}
+            color={new THREE.Color(0.2, 0.2, 0.3)}
             metalness={0.0}
             roughness={0.0}
             transmission={0.9}
             thickness={1.0}
             ior={1.5}
             clearcoat={1.0}
-            emissive={new THREE.Color(0.5, 0.0, 0.0)}
+            emissive={new THREE.Color(0.1, 0.1, 0.2)}
             emissiveIntensity={0.8}
           />
         </mesh>
@@ -290,27 +290,27 @@ export function SpiderModel({ position = [0, 0, 0] }) {
         <mesh position={[-0.25, 0.1, 0]} castShadow>
           <sphereGeometry args={[0.09, 32, 32]} />
           <meshPhysicalMaterial
-            color={new THREE.Color(0.05, 0.02, 0.02)}
+            color={new THREE.Color(0.1, 0.1, 0.15)}
             metalness={0.9}
             roughness={0.1}
             clearcoat={1.0}
             clearcoatRoughness={0.1}
             envMapIntensity={2.0}
-            emissive={new THREE.Color(0.3, 0.05, 0.05)}
+            emissive={new THREE.Color(0.05, 0.05, 0.08)}
             emissiveIntensity={0.5}
           />
         </mesh>
         <mesh position={[-0.25, 0.1, 0]} scale={[0.6, 0.6, 0.6]}>
           <sphereGeometry args={[0.06, 32, 32]} />
           <meshPhysicalMaterial
-            color={new THREE.Color(0.8, 0.1, 0.1)}
+            color={new THREE.Color(0.2, 0.2, 0.3)}
             metalness={0.0}
             roughness={0.0}
             transmission={0.9}
             thickness={1.0}
             ior={1.5}
             clearcoat={1.0}
-            emissive={new THREE.Color(0.5, 0.0, 0.0)}
+            emissive={new THREE.Color(0.1, 0.1, 0.2)}
             emissiveIntensity={0.8}
           />
         </mesh>
@@ -320,7 +320,7 @@ export function SpiderModel({ position = [0, 0, 0] }) {
         <mesh position={[0.1, 0, 0]} rotation={[0, 0, -Math.PI * 0.1]} castShadow>
           <cylinderGeometry args={[0.03, 0.01, 0.25, 12]} />
           <meshPhysicalMaterial
-            color={new THREE.Color(0.1, 0.02, 0.02)}
+            color={new THREE.Color(0.9, 0.9, 0.92)}
             metalness={0.3}
             roughness={0.4}
             clearcoat={0.5}
@@ -330,7 +330,7 @@ export function SpiderModel({ position = [0, 0, 0] }) {
         <mesh position={[-0.1, 0, 0]} rotation={[0, 0, Math.PI * 0.1]} castShadow>
           <cylinderGeometry args={[0.03, 0.01, 0.25, 12]} />
           <meshPhysicalMaterial
-            color={new THREE.Color(0.1, 0.02, 0.02)}
+            color={new THREE.Color(0.9, 0.9, 0.92)}
             metalness={0.3}
             roughness={0.4}
             clearcoat={0.5}
