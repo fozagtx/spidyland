@@ -21,5 +21,4 @@ Thumbs.db
 .env
 .env.*
 
-# 3D models are now tracked in the repository
-# public/*.glb files are included for deployment
+# Static game assets in public/ are tracked in the repository
