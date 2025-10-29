@@ -73,6 +73,24 @@ npm run dev
 # Open browser to http://localhost:5173
 ```
 
+### 🕷️ Optional: Custom Spider GLB Model
+
+The game now supports loading custom 3D spider models in GLB format! 
+
+**To use a custom spider model:**
+
+1. Download the spider GLB model from [Meshy.ai](https://www.meshy.ai/3d-models/spider-for-halloween-with-orange-stripes-and-tooth-that-are-very-scary-PBR-v2-019901c0-01f1-78be-a5f7-976d32e12437)
+2. Save it as `spider.glb` in the `public` folder
+3. The game will automatically load and use your custom model
+
+**If no GLB file is present**, the game will use a beautiful procedurally-generated spider with:
+- Orange stripes and glowing effects
+- Scary teeth/fangs
+- Realistic animated legs
+- Dynamic lighting
+
+See [DOWNLOAD_MODEL.md](./DOWNLOAD_MODEL.md) for detailed instructions.
+
 ### Build for Production
 
 ```bash
@@ -124,21 +142,31 @@ npm run preview
 ```
 spidyland/
 ├── src/
-│   ├── HalloweenGameScene.jsx    # Main game scene
-│   ├── SpiderModel.jsx            # Player spider 3D model
-│   ├── Firefly.jsx                # Collectible fireflies
-│   ├── GhostBat.jsx              # Enemy ghost bats
-│   ├── WebShot.jsx               # Web projectile
-│   ├── SpookyForest.jsx          # Environment components
-│   ├── GameOverScreen.jsx        # End game UI
-│   ├── Leaderboard.jsx           # High scores
-│   ├── TokenContract.js          # Blockchain integration
-│   ├── SoundManager.js           # Audio system
-│   └── styles.css                # Halloween styles
-├── public/                        # Static assets
-├── SPIDYLAND_README.md           # Detailed documentation
-├── DEPLOYMENT.md                 # Deployment guide
-└── package.json                  # Dependencies
+│   ├── GameScene.jsx             # Main game scene (chase mode)
+│   ├── HalloweenGameScene.jsx   # Halloween themed game
+│   ├── SpiderModel.jsx           # Procedural spider 3D model
+│   ├── RealisticSpider.jsx      # Enhanced spider with orange stripes
+│   ├── GLBSpider.jsx            # GLB model loader for custom spiders
+│   ├── ChasingSpider.jsx        # AI-controlled enemy spider
+│   ├── Playground.jsx           # Platform playground environment
+│   ├── PlayerController.jsx     # Player movement and physics
+│   ├── Player.jsx               # Player visual representation
+│   ├── Firefly.jsx              # Collectible fireflies
+│   ├── GhostBat.jsx             # Enemy ghost bats
+│   ├── WebShot.jsx              # Web projectile
+│   ├── SpookyForest.jsx         # Environment components
+│   ├── GameOverScreen.jsx       # End game UI
+│   ├── Leaderboard.jsx          # High scores
+│   ├── TokenContract.js         # Blockchain integration
+│   ├── SoundManager.js          # Audio system
+│   ├── TextureGenerator.js      # Procedural texture generation
+│   └── styles.css               # Halloween styles
+├── public/
+│   └── spider.glb               # Optional: Custom spider model
+├── SPIDYLAND_README.md          # Detailed documentation
+├── DOWNLOAD_MODEL.md            # GLB model download guide
+├── DEPLOYMENT.md                # Deployment guide
+└── package.json                 # Dependencies
 ```
 
 ## 🎨 Tech Stack
