@@ -19,8 +19,16 @@ export function SpiderEnemy({
   const lastWebLayRef = useRef(0);
   const [currentPatrolIndex, setCurrentPatrolIndex] = useState(0);
   const [mode, setMode] = useState('patrol');
+  const [loadError, setLoadError] = useState(false);
 
-  const { scene: modelScene } = useGLTF('/spider.glb');
+  let modelScene = null;
+  try {
+    const gltf = useGLTF('/spider.glb');
+    modelScene = gltf.scene;
+  } catch (error) {
+    console.error('Failed to load spider enemy GLB model:', error);
+    setLoadError(true);
+  }
 
   useEffect(() => {
     if (modelScene) {
@@ -120,6 +128,28 @@ export function SpiderEnemy({
       groupRef.current.position.y = Math.sin(timeRef.current * 3) * 0.1;
     }
   });
+
+  if (loadError || !modelScene) {
+    return (
+      <group ref={groupRef} position={currentPosRef.current}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.5, 8, 8]} />
+          <meshStandardMaterial 
+            color="#ff0000" 
+            emissive="#ff0000" 
+            emissiveIntensity={0.5}
+            wireframe 
+          />
+        </mesh>
+        <pointLight 
+          position={[0, 0.5, 0]} 
+          intensity={mode === 'chase' ? 1.5 : 0.5} 
+          distance={5} 
+          color={mode === 'chase' ? "#ff0000" : "#ff6600"} 
+        />
+      </group>
+    );
+  }
 
   return (
     <group ref={groupRef} position={currentPosRef.current}>

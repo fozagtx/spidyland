@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Suspense } from 'react';
+import React, { useRef, useEffect, Suspense, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -10,8 +10,16 @@ function GLBSpiderModel({ position, playerPosition, speed, modelPath }) {
   const currentPosRef = useRef(position);
   const timeRef = useRef(0);
   const lastSoundRef = useRef(0);
+  const [loadError, setLoadError] = useState(false);
 
-  const { scene: modelScene } = useGLTF(modelPath);
+  let modelScene = null;
+  try {
+    const gltf = useGLTF(modelPath);
+    modelScene = gltf.scene;
+  } catch (error) {
+    console.error('Failed to load spider GLB model:', error);
+    setLoadError(true);
+  }
 
   useEffect(() => {
     if (modelScene) {
@@ -64,6 +72,16 @@ function GLBSpiderModel({ position, playerPosition, speed, modelPath }) {
       groupRef.current.rotation.x = Math.sin(timeRef.current * 1.2) * 0.03;
     }
   });
+
+  if (loadError || !modelScene) {
+    return (
+      <RealisticSpider 
+        position={position}
+        playerPosition={playerPosition}
+        speed={speed}
+      />
+    );
+  }
 
   return (
     <group ref={groupRef} position={currentPosRef.current}>
