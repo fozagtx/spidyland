@@ -1,8 +1,8 @@
 import React from 'react';
-import GameScene from './GameScene';
+import HalloweenGameScene from './HalloweenGameScene';
 
 const App = () => {
-  return <GameScene />;
+  return <HalloweenGameScene />;
 };
 
 export default App;
