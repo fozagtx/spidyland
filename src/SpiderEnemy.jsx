@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
 import { soundManager } from './SoundManager';
+import { loadGLTF, cloneGLTFScene, applyMeshDefaults } from './utils/glbLoader';
 
 export function SpiderEnemy({ 
   position, 
@@ -20,30 +19,44 @@ export function SpiderEnemy({
   const [currentPatrolIndex, setCurrentPatrolIndex] = useState(0);
   const [mode, setMode] = useState('patrol');
   const [loadError, setLoadError] = useState(false);
-
-  let modelScene = null;
-  try {
-    const gltf = useGLTF('/spider.glb');
-    modelScene = gltf.scene;
-  } catch (error) {
-    console.error('Failed to load spider enemy GLB model:', error);
-    setLoadError(true);
-  }
+  const [modelScene, setModelScene] = useState(null);
 
   useEffect(() => {
-    if (modelScene) {
-      modelScene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          
-          if (child.material) {
-            child.material.needsUpdate = true;
-          }
+    let isMounted = true;
+
+    setModelScene(null);
+    setLoadError(false);
+
+    loadGLTF('/spider.glb')
+      .then((gltf) => {
+        if (!isMounted) {
+          return;
         }
+
+        try {
+          const preparedScene = cloneGLTFScene(gltf);
+          applyMeshDefaults(preparedScene);
+          setModelScene(preparedScene);
+          setLoadError(false);
+        } catch (cloneError) {
+          console.error('Failed to prepare spider enemy GLB model:', cloneError);
+          setModelScene(null);
+          setLoadError(true);
+        }
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        console.error('Failed to load spider enemy GLB model:', error);
+        setLoadError(true);
       });
-    }
-  }, [modelScene]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useFrame((state, delta) => {
     if (isTrapped) {
@@ -153,7 +166,7 @@ export function SpiderEnemy({
 
   return (
     <group ref={groupRef} position={currentPosRef.current}>
-      <primitive object={modelScene.clone()} scale={[1.2, 1.2, 1.2]} />
+      <primitive object={modelScene} scale={[1.2, 1.2, 1.2]} />
       <pointLight 
         position={[0, 0.5, 0]} 
         intensity={mode === 'chase' ? 1.5 : 0.5} 

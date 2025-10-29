@@ -1,9 +1,8 @@
-import React, { useRef, useEffect, Suspense, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
 import { soundManager } from './SoundManager';
 import { RealisticSpider } from './RealisticSpider';
+import { loadGLTF, cloneGLTFScene, applyMeshDefaults } from './utils/glbLoader';
 
 function GLBSpiderModel({ position, playerPosition, speed, modelPath }) {
   const groupRef = useRef();
@@ -11,30 +10,45 @@ function GLBSpiderModel({ position, playerPosition, speed, modelPath }) {
   const timeRef = useRef(0);
   const lastSoundRef = useRef(0);
   const [loadError, setLoadError] = useState(false);
-
-  let modelScene = null;
-  try {
-    const gltf = useGLTF(modelPath);
-    modelScene = gltf.scene;
-  } catch (error) {
-    console.error('Failed to load spider GLB model:', error);
-    setLoadError(true);
-  }
+  const [modelScene, setModelScene] = useState(null);
 
   useEffect(() => {
-    if (modelScene) {
-      modelScene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          
-          if (child.material) {
-            child.material.needsUpdate = true;
-          }
+    let isMounted = true;
+
+    setModelScene(null);
+    setLoadError(false);
+
+    loadGLTF(modelPath)
+      .then((gltf) => {
+        if (!isMounted) {
+          return;
         }
+
+        try {
+          const preparedScene = cloneGLTFScene(gltf);
+          applyMeshDefaults(preparedScene);
+          setModelScene(preparedScene);
+          setLoadError(false);
+        } catch (cloneError) {
+          console.error('Failed to prepare spider GLB model:', cloneError);
+          setModelScene(null);
+          setLoadError(true);
+        }
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        console.error('Failed to load spider GLB model:', error);
+        setModelScene(null);
+        setLoadError(true);
       });
-    }
-  }, [modelScene]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [modelPath]);
 
   useFrame((state, delta) => {
     timeRef.current += delta;
@@ -85,7 +99,7 @@ function GLBSpiderModel({ position, playerPosition, speed, modelPath }) {
 
   return (
     <group ref={groupRef} position={currentPosRef.current}>
-      <primitive object={modelScene.clone()} scale={[0.5, 0.5, 0.5]} />
+      <primitive object={modelScene} scale={[0.5, 0.5, 0.5]} />
       <pointLight position={[0, 0.5, 0]} intensity={0.5} distance={3} color="#ff6600" />
     </group>
   );
@@ -93,21 +107,11 @@ function GLBSpiderModel({ position, playerPosition, speed, modelPath }) {
 
 export function GLBSpider({ position, playerPosition, speed = 0.02, modelPath = '/spider.glb' }) {
   return (
-    <Suspense 
-      fallback={
-        <RealisticSpider 
-          position={position}
-          playerPosition={playerPosition}
-          speed={speed}
-        />
-      }
-    >
-      <GLBSpiderModel
-        position={position}
-        playerPosition={playerPosition}
-        speed={speed}
-        modelPath={modelPath}
-      />
-    </Suspense>
+    <GLBSpiderModel
+      position={position}
+      playerPosition={playerPosition}
+      speed={speed}
+      modelPath={modelPath}
+    />
   );
 }

@@ -1,37 +1,52 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import { loadGLTF, cloneGLTFScene, applyMeshDefaults } from './utils/glbLoader';
 
 export function LabubuPlayer({ position, velocity, lightRadius = 5, isDashing = false }) {
   const groupRef = useRef();
   const timeRef = useRef(0);
   const lastPositionRef = useRef(new THREE.Vector3(position[0], position[1], position[2]));
   const [loadError, setLoadError] = useState(false);
-
-  let modelScene = null;
-  try {
-    const gltf = useGLTF('/creepy_labubu.glb');
-    modelScene = gltf.scene;
-  } catch (error) {
-    console.error('Failed to load Labubu GLB model:', error);
-    setLoadError(true);
-  }
+  const [modelScene, setModelScene] = useState(null);
 
   useEffect(() => {
-    if (modelScene) {
-      modelScene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          
-          if (child.material) {
-            child.material.needsUpdate = true;
-          }
+    let isMounted = true;
+
+    setModelScene(null);
+    setLoadError(false);
+
+    loadGLTF('/creepy_labubu.glb')
+      .then((gltf) => {
+        if (!isMounted) {
+          return;
         }
+
+        try {
+          const preparedScene = cloneGLTFScene(gltf);
+          applyMeshDefaults(preparedScene);
+          setModelScene(preparedScene);
+          setLoadError(false);
+        } catch (cloneError) {
+          console.error('Failed to prepare Labubu GLB model:', cloneError);
+          setModelScene(null);
+          setLoadError(true);
+        }
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        console.error('Failed to load Labubu GLB model:', error);
+        setModelScene(null);
+        setLoadError(true);
       });
-    }
-  }, [modelScene]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useFrame((state, delta) => {
     timeRef.current += delta;
@@ -102,7 +117,7 @@ export function LabubuPlayer({ position, velocity, lightRadius = 5, isDashing = 
 
   return (
     <group ref={groupRef} position={position}>
-      <primitive object={modelScene.clone()} scale={[0.8, 0.8, 0.8]} />
+      <primitive object={modelScene} scale={[0.8, 0.8, 0.8]} />
       
       <pointLight 
         position={[0, 1, 0]} 

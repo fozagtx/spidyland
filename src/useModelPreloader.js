@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useGLTF } from '@react-three/drei';
+import { loadGLTF } from './utils/glbLoader';
 
 export const MODEL_PATHS = {
   SPIDER: '/spider.glb',
@@ -11,55 +11,51 @@ export function useModelPreloader() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const preloadModels = async () => {
-      const loadErrors = {};
-      
-      for (const [key, path] of Object.entries(MODEL_PATHS)) {
-        try {
-          await new Promise((resolve, reject) => {
-            useGLTF.preload(
-              path,
-              () => {
-                console.log(`✅ Preloaded model: ${path}`);
-                resolve();
-              },
-              (error) => {
-                console.error(`❌ Failed to preload model ${path}:`, error);
-                loadErrors[key] = error;
-                reject(error);
-              }
-            );
-          });
-        } catch (error) {
-          console.warn(`Continuing despite preload error for ${path}`);
-          loadErrors[key] = error;
+    let isMounted = true;
+    const entries = Object.entries(MODEL_PATHS);
+
+    Promise.allSettled(entries.map(([, path]) => loadGLTF(path)))
+      .then((results) => {
+        if (!isMounted) {
+          return;
         }
-      }
 
-      setErrors(loadErrors);
-      setLoaded(true);
+        const loadErrors = {};
+
+        results.forEach((result, index) => {
+          const [key, path] = entries[index];
+
+          if (result.status === 'fulfilled') {
+            console.log(`✅ Preloaded model: ${path}`);
+          } else {
+            console.error(`❌ Failed to preload model ${path}:`, result.reason);
+            loadErrors[key] = result.reason;
+          }
+        });
+
+        setErrors(loadErrors);
+        setLoaded(true);
+      });
+
+    return () => {
+      isMounted = false;
     };
-
-    preloadModels();
   }, []);
 
   return { loaded, errors, hasErrors: Object.keys(errors).length > 0 };
 }
 
 export function preloadModel(modelPath) {
-  return new Promise((resolve, reject) => {
-    try {
-      useGLTF.preload(modelPath);
-      resolve();
-    } catch (error) {
+  return loadGLTF(modelPath)
+    .then(() => undefined)
+    .catch((error) => {
       console.error(`Failed to preload model: ${modelPath}`, error);
-      reject(error);
-    }
-  });
+      throw error;
+    });
 }
 
 export function preloadAllModels() {
   return Promise.allSettled(
-    Object.values(MODEL_PATHS).map(path => preloadModel(path))
+    Object.values(MODEL_PATHS).map((path) => preloadModel(path))
   );
 }
