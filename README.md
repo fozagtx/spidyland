@@ -48,4 +48,10 @@ npm run preview
 - `src/gameobjects/*` holds the player, enemy, and projectile classes.
 - `public/assets` stores art assets and bitmap font data used by the game.
 
+## Halloween event
+
+- Added a walking spider foe that prowls the haunted runway and lunges at the player.
+- Refreshed every scene with pumpkins, moonlit skies, ember particles, and Halloween colors.
+- Player HUD, menus, and splash screen now lean into the seasonal theme.
+
 Enjoy battling through Spidyland in its new Phaser-powered form!

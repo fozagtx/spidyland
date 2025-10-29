@@ -18,9 +18,38 @@ export class HudScene extends Scene {
     }
 
     create() {
-        this.points_text = this.add.bitmapText(10, 10, "pixelfont", "POINTS:0000", 24);
-        this.remaining_time_text = this.add.bitmapText(this.scale.width - 10, 10, "pixelfont", `REMAINING:${this.remaining_time}s`, 24)
-            .setOrigin(1, 0);
+        const { width } = this.scale;
+
+        this.cameras.main.setBackgroundColor(0x05000b);
+
+        this.add.rectangle(0, 0, width, 48, 0x1f0626)
+            .setOrigin(0, 0)
+            .setAlpha(0.65);
+
+        this.points_text = this.add.bitmapText(46, 12, "pixelfont", "POINTS:0000", 24)
+            .setTint(0xffd35a);
+        this.remaining_time_text = this.add.bitmapText(width - 46, 12, "pixelfont", `REMAINING:${this.remaining_time}s`, 24)
+            .setOrigin(1, 0)
+            .setTint(0xff8f3f);
+
+        const leftPumpkin = this.add.image(20, 24, "pumpkin")
+            .setOrigin(0.5, 0.5)
+            .setScale(0.6)
+            .setAlpha(0.9);
+        const rightPumpkin = this.add.image(width - 20, 24, "pumpkin")
+            .setOrigin(0.5, 0.5)
+            .setScale(0.6)
+            .setAlpha(0.9);
+
+        this.tweens.add({
+            targets: [leftPumpkin, rightPumpkin],
+            scale: { from: 0.58, to: 0.66 },
+            duration: 1200,
+            ease: "Sine.InOut",
+            yoyo: true,
+            repeat: -1,
+            delay: 200
+        });
     }
 
     update_points(points) {
