@@ -6,7 +6,8 @@ import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { PlayerController } from './PlayerController';
 import { Treasure } from './Treasure';
-import { ChasingSpider } from './ChasingSpider';
+import { GLBSpider } from './GLBSpider';
+import { Playground } from './Playground';
 import { soundManager } from './SoundManager';
 
 function EnhancedFloor() {
@@ -250,7 +251,7 @@ export default function GameScene() {
           <Treasure position={treasurePosition} collected={treasureCollected} />
           
           {spiders.map((spider) => (
-            <ChasingSpider
+            <GLBSpider
               key={spider.id}
               position={spider.position}
               playerPosition={playerPosition}
@@ -258,7 +259,7 @@ export default function GameScene() {
             />
           ))}
           
-          <Obstacles />
+          <Playground />
         </Suspense>
 
         <EnhancedFloor />
