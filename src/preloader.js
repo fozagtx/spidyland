@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { ensureHalloweenAssets } from "./utils/halloweenAssets";
 
 // Class to preload all the assets
 // Remember you can load this assets in another scene if you need it
@@ -38,6 +39,8 @@ export class Preloader extends Phaser.Scene {
     }
 
     create() {
+        ensureHalloweenAssets(this);
+
         // Create bitmap font and load it in cache
         const config = {
             image: 'knighthawks',
