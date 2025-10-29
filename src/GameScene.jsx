@@ -164,34 +164,138 @@ export default function GameScene() {
         alignItems: 'center',
         justifyContent: 'center',
         color: 'white',
-        fontFamily: 'Arial, sans-serif'
+        fontFamily: 'Arial, sans-serif',
+        overflow: 'auto',
+        padding: '20px'
       }}>
-        <h1 style={{ fontSize: '48px', marginBottom: '20px', textShadow: '0 0 20px #ff00ff' }}>
-          🕷️ Spider Chase 🕷️
+        <h1 style={{ 
+          fontSize: '56px', 
+          marginBottom: '30px', 
+          textShadow: '0 0 30px #ff00ff, 0 0 60px #ff00ff',
+          animation: 'pulse 2s infinite'
+        }}>
+          🕷️ Spider Chase VR 🕷️
         </h1>
-        <p style={{ fontSize: '20px', marginBottom: '30px', textAlign: 'center', maxWidth: '600px' }}>
-          Run from the spiders and collect the treasure!<br/>
-          Use WASD or Arrow Keys to move<br/>
-          Touch screen supported for mobile
-        </p>
+        
+        <div style={{
+          background: 'rgba(0, 0, 0, 0.6)',
+          border: '3px solid rgba(255, 0, 255, 0.5)',
+          borderRadius: '20px',
+          padding: '30px 40px',
+          maxWidth: '700px',
+          marginBottom: '30px',
+          boxShadow: '0 0 40px rgba(255, 0, 255, 0.4)',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <h2 style={{ 
+            fontSize: '28px', 
+            marginBottom: '20px', 
+            color: '#00ffff',
+            textAlign: 'center',
+            textShadow: '0 0 10px #00ffff'
+          }}>
+            📖 GAME MANUAL
+          </h2>
+          
+          <div style={{ fontSize: '18px', lineHeight: '1.8', marginBottom: '25px' }}>
+            <div style={{ 
+              fontSize: '22px', 
+              color: '#ffaa00', 
+              marginBottom: '12px',
+              fontWeight: 'bold'
+            }}>
+              🎮 CONTROLS
+            </div>
+            <div style={{ paddingLeft: '20px', marginBottom: '20px' }}>
+              <div style={{ marginBottom: '8px' }}>
+                <span style={{ color: '#00ff88', fontWeight: 'bold' }}>⌨️ W A S D Keys</span>
+                <span style={{ color: '#cccccc' }}> - Move your character</span>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <span style={{ color: '#00ff88', fontWeight: 'bold' }}>⬆️ Arrow Keys</span>
+                <span style={{ color: '#cccccc' }}> - Alternative movement</span>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <span style={{ color: '#00ff88', fontWeight: 'bold' }}>📱 Touch & Drag</span>
+                <span style={{ color: '#cccccc' }}> - Mobile controls</span>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <span style={{ color: '#00ff88', fontWeight: 'bold' }}>🎥 Camera</span>
+                <span style={{ color: '#cccccc' }}> - Auto-follows (VR style)</span>
+              </div>
+            </div>
+
+            <div style={{ 
+              fontSize: '22px', 
+              color: '#ff6bff', 
+              marginBottom: '12px',
+              fontWeight: 'bold'
+            }}>
+              🎯 OBJECTIVES
+            </div>
+            <div style={{ paddingLeft: '20px', marginBottom: '20px', color: '#cccccc' }}>
+              <div style={{ marginBottom: '8px' }}>
+                ✨ <strong style={{ color: '#ffd700' }}>Collect golden treasures</strong> for points (+100 each)
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                🕷️ <strong style={{ color: '#ff6666' }}>Avoid the spiders</strong> chasing you
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                🏃 <strong style={{ color: '#66ff66' }}>Survive</strong> as long as possible
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                🎮 <strong style={{ color: '#00ffff' }}>Master</strong> the physics-based controls
+              </div>
+            </div>
+
+            <div style={{ 
+              fontSize: '22px', 
+              color: '#ff8844', 
+              marginBottom: '12px',
+              fontWeight: 'bold'
+            }}>
+              ⚠️ TIPS
+            </div>
+            <div style={{ paddingLeft: '20px', color: '#cccccc' }}>
+              <div style={{ marginBottom: '8px' }}>
+                💨 Use momentum - movement has realistic physics
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                👀 Camera follows automatically - focus on movement
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                🎯 Plan your path to avoid spider clusters
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button
           onClick={handleStartGame}
           style={{
-            padding: '20px 40px',
-            fontSize: '24px',
+            padding: '25px 50px',
+            fontSize: '28px',
             background: 'linear-gradient(45deg, #ff00ff, #00ffff)',
             border: 'none',
-            borderRadius: '10px',
+            borderRadius: '15px',
             color: 'white',
             cursor: 'pointer',
             fontWeight: 'bold',
-            boxShadow: '0 0 30px rgba(255, 0, 255, 0.5)',
-            transition: 'transform 0.2s'
+            boxShadow: '0 0 40px rgba(255, 0, 255, 0.6)',
+            transition: 'all 0.3s',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
           }}
-          onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.1)';
+            e.target.style.boxShadow = '0 0 60px rgba(255, 0, 255, 0.9)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.boxShadow = '0 0 40px rgba(255, 0, 255, 0.6)';
+          }}
         >
-          Start Game
+          🎮 Start Game
         </button>
       </div>
     );
@@ -289,26 +393,89 @@ export default function GameScene() {
           top: '20px',
           left: '20px',
           color: '#ffffff',
-          fontFamily: 'monospace',
-          fontSize: '18px',
-          textShadow: '0 0 10px #00ffff, 0 2px 8px rgba(0, 0, 0, 0.8)',
+          fontFamily: 'Arial, sans-serif',
+          fontSize: '16px',
           pointerEvents: 'none',
           userSelect: 'none',
-          lineHeight: '1.8',
-          background: 'rgba(0, 0, 0, 0.7)',
-          padding: '20px 25px',
+          lineHeight: '1.6',
+          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 40, 0.9))',
+          padding: '25px 30px',
           borderRadius: '15px',
           backdropFilter: 'blur(10px)',
-          border: '2px solid rgba(0, 255, 255, 0.3)',
+          border: '3px solid rgba(0, 255, 255, 0.4)',
+          boxShadow: '0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5)',
+          maxWidth: '320px',
         }}
       >
-        <div style={{ fontSize: '24px', marginBottom: '10px', color: '#00ffff' }}>
-          🎮 VR Controls
+        <div style={{ 
+          fontSize: '26px', 
+          marginBottom: '15px', 
+          color: '#00ffff',
+          fontWeight: 'bold',
+          textShadow: '0 0 15px #00ffff, 0 2px 10px rgba(0, 0, 0, 0.8)',
+          borderBottom: '2px solid rgba(0, 255, 255, 0.3)',
+          paddingBottom: '10px',
+        }}>
+          📖 GAME MANUAL
         </div>
-        <div>⌨️ WASD / Arrow Keys - Move</div>
-        <div>📱 Touch & Drag - Mobile</div>
-        <div>🎥 Dynamic Camera - Auto Follow</div>
-        <div>🎯 Score: <span style={{ color: '#ffd700' }}>{score}</span></div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <div style={{ 
+            fontSize: '18px', 
+            color: '#ffaa00', 
+            marginBottom: '8px',
+            fontWeight: 'bold',
+            textShadow: '0 0 10px #ffaa00'
+          }}>
+            🎮 CONTROLS
+          </div>
+          <div style={{ paddingLeft: '15px', fontSize: '15px', lineHeight: '1.9' }}>
+            <div style={{ marginBottom: '5px' }}>
+              <span style={{ color: '#00ff88', fontWeight: 'bold' }}>⌨️ W A S D</span>
+              <span style={{ color: '#aaaaaa' }}> - Move Player</span>
+            </div>
+            <div style={{ marginBottom: '5px' }}>
+              <span style={{ color: '#00ff88', fontWeight: 'bold' }}>⬆️ Arrow Keys</span>
+              <span style={{ color: '#aaaaaa' }}> - Move Player</span>
+            </div>
+            <div style={{ marginBottom: '5px' }}>
+              <span style={{ color: '#00ff88', fontWeight: 'bold' }}>📱 Touch & Drag</span>
+              <span style={{ color: '#aaaaaa' }}> - Mobile Control</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <div style={{ 
+            fontSize: '18px', 
+            color: '#ff6bff', 
+            marginBottom: '8px',
+            fontWeight: 'bold',
+            textShadow: '0 0 10px #ff6bff'
+          }}>
+            🎯 OBJECTIVE
+          </div>
+          <div style={{ paddingLeft: '15px', fontSize: '14px', lineHeight: '1.7', color: '#cccccc' }}>
+            <div>• Collect golden treasures</div>
+            <div>• Avoid the spiders</div>
+            <div>• Survive as long as possible</div>
+          </div>
+        </div>
+
+        <div style={{ 
+          borderTop: '2px solid rgba(0, 255, 255, 0.3)',
+          paddingTop: '15px',
+          marginTop: '15px'
+        }}>
+          <div style={{ 
+            fontSize: '20px', 
+            color: '#ffd700',
+            fontWeight: 'bold',
+            textShadow: '0 0 15px #ffd700'
+          }}>
+            💰 Score: <span style={{ fontSize: '24px' }}>{score}</span>
+          </div>
+        </div>
       </div>
 
       <div
