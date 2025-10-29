@@ -21,6 +21,5 @@ Thumbs.db
 .env
 .env.*
 
-# Optional 3D models (downloaded separately)
-public/spider.glb
-public/*.glb
+# 3D models are now tracked in the repository
+# public/*.glb files are included for deployment

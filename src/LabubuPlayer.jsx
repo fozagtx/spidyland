@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -7,8 +7,16 @@ export function LabubuPlayer({ position, velocity, lightRadius = 5, isDashing = 
   const groupRef = useRef();
   const timeRef = useRef(0);
   const lastPositionRef = useRef(new THREE.Vector3(position[0], position[1], position[2]));
+  const [loadError, setLoadError] = useState(false);
 
-  const { scene: modelScene } = useGLTF('/creepy_labubu.glb');
+  let modelScene = null;
+  try {
+    const gltf = useGLTF('/creepy_labubu.glb');
+    modelScene = gltf.scene;
+  } catch (error) {
+    console.error('Failed to load Labubu GLB model:', error);
+    setLoadError(true);
+  }
 
   useEffect(() => {
     if (modelScene) {
@@ -61,6 +69,36 @@ export function LabubuPlayer({ position, velocity, lightRadius = 5, isDashing = 
       }
     }
   });
+
+  if (loadError || !modelScene) {
+    return (
+      <group ref={groupRef} position={position}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.5, 32, 32]} />
+          <meshStandardMaterial 
+            color="#ff66cc" 
+            emissive="#ff66cc" 
+            emissiveIntensity={0.5}
+          />
+        </mesh>
+        <pointLight 
+          position={[0, 1, 0]} 
+          intensity={1.5} 
+          distance={lightRadius} 
+          color="#66ccff" 
+          castShadow
+        />
+        {isDashing && (
+          <pointLight 
+            position={[0, 0.5, 0]} 
+            intensity={2} 
+            distance={3} 
+            color="#ffff00" 
+          />
+        )}
+      </group>
+    );
+  }
 
   return (
     <group ref={groupRef} position={position}>
