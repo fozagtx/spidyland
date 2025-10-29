@@ -66,7 +66,7 @@ export function Player({ position, onPositionChange, targetPosition, keysPressed
           roughness={0.3}
           metalness={0.6}
           emissive="#2980b9"
-          emissiveIntensity={0.2}
+          emissiveIntensity={0.6}
         />
       </mesh>
 
@@ -77,7 +77,7 @@ export function Player({ position, onPositionChange, targetPosition, keysPressed
           roughness={0.4}
           metalness={0.3}
           emissive="#e67e22"
-          emissiveIntensity={0.1}
+          emissiveIntensity={0.45}
         />
       </mesh>
 
@@ -106,7 +106,7 @@ export function Player({ position, onPositionChange, targetPosition, keysPressed
         </mesh>
       </group>
 
-      <pointLight position={[0, 1, 0]} intensity={1.5} distance={5} color="#3498db" />
+      <pointLight position={[0, 1, 0]} intensity={2.5} distance={8} color="#3498db" />
     </group>
   );
 }

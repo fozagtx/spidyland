@@ -204,7 +204,7 @@ export default function GameScene() {
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 0.8,
+          toneMappingExposure: 1.2,
           outputColorSpace: THREE.SRGBColorSpace,
           shadowMap: {
             enabled: true,
@@ -224,10 +224,11 @@ export default function GameScene() {
           far={200}
         />
 
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.55} />
+        <hemisphereLight args={['#b7d8ff', '#0a1428', 0.7]} />
         <directionalLight
           position={[10, 20, 10]}
-          intensity={1}
+          intensity={1.2}
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
@@ -237,9 +238,10 @@ export default function GameScene() {
           shadow-camera-top={30}
           shadow-camera-bottom={-30}
         />
-        <pointLight position={[0, 10, 0]} intensity={0.5} distance={50} color="#4a90e2" />
-        <pointLight position={[-20, 5, -20]} intensity={0.4} distance={40} color="#e94b3c" />
-        <pointLight position={[20, 5, 20]} intensity={0.4} distance={40} color="#50c878" />
+        <pointLight position={[0, 10, 0]} intensity={0.7} distance={55} color="#4a90e2" />
+        <pointLight position={[-20, 5, -20]} intensity={0.55} distance={42} color="#e94b3c" />
+        <pointLight position={[20, 5, 20]} intensity={0.55} distance={42} color="#50c878" />
+        <pointLight position={[0, 8, 16]} intensity={0.75} distance={60} color="#d9f0ff" />
 
         <Suspense fallback={<LoadingFallback />}>
           <PlayerController 
@@ -276,8 +278,8 @@ export default function GameScene() {
             blendFunction={BlendFunction.ADD}
           />
           <Vignette
-            offset={0.4}
-            darkness={0.8}
+            offset={0.35}
+            darkness={0.45}
             blendFunction={BlendFunction.NORMAL}
           />
         </EffectComposer>
